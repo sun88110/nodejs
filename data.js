@@ -10,4 +10,8 @@ function sum(a, b) {
 }
 const PI = 3.14;
 
-export { studentsAry, sum, PI };
+function getStudentsInfo() {
+  return ["홍길동", "김민식", "박충원", "홍영기"];
+}
+
+export { studentsAry, PI, getStudentsInfo };
