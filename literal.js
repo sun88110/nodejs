@@ -33,3 +33,9 @@ console.log(fn, ln, age);
 // Array Destructuring
 let [ary1, ary2, ...ary3] = getStudentsInfo();
 console.log(ary1, ary2, ary3);
+
+// default function parameter.
+function minus(n1 = 0, n2 = 0) {
+  return n1 - n2;
+}
+console.log(minus(10));
