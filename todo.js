@@ -1,46 +1,38 @@
 // todo.js
-import { jsonString } from "./data.js";
-let jsonObj = JSON.parse(jsonString);
+// sample.txt 단어 갯수 => ?개, 'e'문자가 포함된 => ?개
+const fs = require("fs"); // 내장모듈. file systeme
+let Evalue = 0;
+let value = 0;
+let data = fs.readFileSync("sample.txt", "utf-8");
 
-console.table(jsonObj);
-// reduce 출력: Female => id, fullName, email, ip_address
-const resultAry = jsonObj.reduce((acc, elem) => {
-  if (elem.id % 2 === 0) {
-    acc.push({
-      id: elem.id,
-      fullName: `${elem.first_name} ${elem.last_name}`,
-      email: elem.email,
-      ip_address: elem.ip_address,
-    });
+fs.readFile("sample.txt", (err, data) => {
+  //(err,data)에러가 뜨면 에러 났다고 표기
+  if (err) {
+    console.log(err);
+    return;
   }
-  return acc; // 반드시 반환해야 reduce가 동작함
-}, []);
+  console.log(data.toString());
+  let list = data.toString().split(" ");
+  console.log(list);
 
-console.table(resultAry);
-
-//성별에 따른 이름 배열에 넣기
-const resultgender = jsonObj.reduce(
-  (acc, elem) => {
-    let female = [];
-    let male = [];
-    if (elem.gender == "Female") {
-      acc.female.push(elem.first_name);
-    } else if (elem.gender == "Male") {
-      acc.male.push(elem.first_name);
+  for (let i = 0; i < list.length; i++) {
+    const word = list[i];
+    if (word.toLowerCase().includes("e")) {
+      Evalue++;
     }
-    return acc;
-  },
-  { female: [], male: [] }
-);
-
-console.table(resultgender);
-
-let resultAry2 = jsonObj.reduce((acc, elem) => {
-  const key = elem["gender"];
-  if (!acc[key]) {
-    acc[key] = [];
   }
-  acc[key].push(elem.first_name);
-  return acc;
-}, {});
-console.table(resultAry2);
+  console.log(`e가 포함된 단어 갯수 = ${Evalue}개`);
+  console.log(`총 단어 개수: ${list.length}개`);
+});
+//리듀스로 만든 형태
+// const eContainingWordsCount = list.reduce((count, word) => {
+//         // 단어를 소문자로 변환하고 'e' 포함 여부 확인
+//         if (word.toLowerCase().includes("e")) {
+//             return count + 1; // 'e'가 포함되면 카운트를 1 증가
+//         }
+//         return count; // 포함되지 않으면 카운트 유지
+//     }, 0); // 초기값 (count)을 0으로 설정
+
+//     console.log("--- 분석 결과 ---");
+//     console.log(`총 단어 개수: ${list.length}개`);
+//     console.log(`'e'가 포함된 단어 갯수: ${eContainingWordsCount}개`);
