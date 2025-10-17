@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onclick="post_register()">등록(post요청)</button>
+    <button onclick="put_modify()">수정(put요청)</button>
+    <button onclick="delete_remove()">삭제(delete요청)</button>
+
+    <script>
+      function delete_remove() {
+        fetch("http://localhost:3000/posts/3", {
+          method: "DELETE",
+        })
+          .then((response) => response.json()) // response.text로 변환하면 콘솔에 json하면 무슨 값이 넘어가는지 보임
+          .then((json) => {
+            console.log(json);
+            alert("삭제되었습니다.");
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function put_modify() {
+        fetch("http://localhost:3000/posts/3", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify({
+            title: "3번글 수정",
+            content: "3번글 내용 수정",
+            id: 3,
+          }),
+        })
+          .then((response) => response.json()) // response.text로 변환하면 콘솔에 json하면 무슨 값이 넘어가는지 보임
+          .then((json) => {
+            console.log(json);
+            alert("수정되었습니다.");
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function post_register() {
+        fetch("http://localhost:3000/posts", {
+          // Resource(http://localhost:3000/posts) + Method(POST) => Restful API
+          // http://localhost:3000/posts => URL
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json; charset=UTF-8",
+          },
+          body: JSON.stringify({
+            title: "post test",
+            content: "post content",
+            id: 3,
+          }),
+        })
+          .then((response) => response.json())
+          .then((json) => {
+            console.log(json);
+            alert("등록되었습니다.");
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>
