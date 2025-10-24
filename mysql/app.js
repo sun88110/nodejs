@@ -2,12 +2,13 @@ const express = require("express");
 const mysql = require("./sql/index");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
-
+const cors = require("cors");
 // express app setup
 const app = express();
 const port = 3000;
 
 //정적디렉토리 설정.
+app.use(cors());
 app.use(express.static("public"));
 
 const transporter = nodemailer.createTransport({
@@ -176,7 +177,10 @@ app.get("/customers", async (req, res) => {
 //검색
 app.get("/customer/:id", async (req, res) => {
   const id = req.params.id;
-  let result = await mysql.queryExecute("select * from customers", [id]);
+  let result = await mysql.queryExecute(
+    "select * from customers where id = ?",
+    [id]
+  );
   res.send(result);
 });
 //추가
