@@ -83,6 +83,80 @@ app.delete("/board/:id", async (req, res) => {
   res.send(result);
 });
 
+// 댓글 작성
+app.post("/reply", async (req, res) => {
+  const param = req.body.param; // { content, writer, writerId, post_id }
+
+  if (!param.content || !param.post_id) {
+    return res
+      .status(400)
+      .send({ message: "댓글 내용과 게시글 ID가 필요합니다." });
+  }
+
+  try {
+    const result = await mysql.queryExecute("INSERT INTO tb1_reply SET ?", [
+      param,
+    ]);
+    res.status(201).send(result);
+  } catch (error) {
+    console.error("댓글 삽입 오류:", error.message);
+    res.status(500).send({ message: "DB 오류", detail: error.message });
+  }
+});
+
+// 특정 게시글 댓글 조회
+app.get("/replies/:postId", async (req, res) => {
+  const postId = req.params.postId;
+  try {
+    const result = await mysql.queryExecute(
+      "SELECT * FROM tb1_reply WHERE post_id = ? ORDER BY created_at ASC",
+      [postId]
+    );
+    res.send(result);
+  } catch (error) {
+    console.error("댓글 조회 오류:", error.message);
+    res.status(500).send({ message: "DB 오류", detail: error.message });
+  }
+});
+
+// 댓글 수정
+app.put("/reply", async (req, res) => {
+  const param = req.body.param; // { reply_id, content }
+  const { reply_id, ...updateData } = param;
+
+  if (!reply_id)
+    return res.status(400).send({ message: "댓글 ID가 필요합니다." });
+
+  const setClauses = Object.keys(updateData)
+    .map((col) => `${col} = ?`)
+    .join(", ");
+  const values = Object.values(updateData);
+  const sql = `UPDATE tb1_reply SET ${setClauses} WHERE reply_id = ?`;
+
+  try {
+    const result = await mysql.queryExecute(sql, [...values, reply_id]);
+    res.send(result);
+  } catch (error) {
+    console.error("댓글 수정 오류:", error.message);
+    res.status(500).send({ message: "DB 오류", detail: error.message });
+  }
+});
+
+// 댓글 삭제
+app.delete("/reply/:reply_id", async (req, res) => {
+  const reply_id = req.params.reply_id;
+  try {
+    const result = await mysql.queryExecute(
+      "DELETE FROM tb1_reply WHERE reply_id = ?",
+      [reply_id]
+    );
+    res.send(result);
+  } catch (error) {
+    console.error("댓글 삭제 오류:", error.message);
+    res.status(500).send({ message: "DB 오류", detail: error.message });
+  }
+});
+
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
 });
