@@ -20,10 +20,21 @@ app.get("/boards", async (req, res) => {
 });
 
 app.post("/board", async (req, res) => {
-  console.log(req.body);
+  console.log("클라이언트 요청 데이터:", req.body.param); // 전송된 데이터 확인
   const param = req.body.param;
-  let result = await mysql.queryExecute("insert into tb1_board set ?", [param]);
-  res.send(result);
+
+  try {
+    let result = await mysql.queryExecute("insert into tb1_board set ?", [
+      param,
+    ]);
+    res.status(201).send(result);
+  } catch (error) {
+    // 🚨 이 부분이 서버 콘솔에 MySQL 오류를 출력합니다.
+    console.error("데이터베이스 삽입 오류 상세:", error);
+    res
+      .status(500)
+      .send({ message: "DB 오류", error: error.sqlMessage || error.message });
+  }
 });
 
 app.get("/board/:id", async (req, res) => {
