@@ -124,17 +124,138 @@ const canEditPost = () => authStore.hasPermission(post.value?.writerId);
 </script>
 
 <style scoped>
+/* 전체 댓글 섹션 카드 느낌 */
+.replies-section {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* 댓글 작성 영역 */
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
 .reply-form textarea {
   width: 100%;
-  margin-bottom: 5px;
+  min-height: 70px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  resize: vertical;
+  font-size: 14px;
+  transition: border-color 0.2s;
 }
+
+.reply-form textarea:focus {
+  outline: none;
+  border-color: #3b82f6; /* 파란색 포커스 */
+  box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+}
+
+/* 댓글 작성 버튼 */
+.reply-form button {
+  margin-top: 8px;
+  align-self: flex-end;
+  padding: 6px 16px;
+  background-color: #3b82f6;
+  color: #fff;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.reply-form button:disabled {
+  background-color: #cbd5e1;
+  cursor: not-allowed;
+}
+
+.reply-form button:hover:not(:disabled) {
+  background-color: #2563eb;
+}
+
+/* 댓글 리스트 */
 .reply-list {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+
 .reply-list li {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 5px;
+  align-items: center;
+  padding: 12px 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.1s;
+}
+
+.reply-list li:hover {
+  transform: translateY(-2px);
+}
+
+/* 댓글 작성자 강조 */
+.reply-list strong {
+  color: #1f2937;
+}
+
+/* 댓글 삭제 버튼 */
+.reply-list button {
+  padding: 4px 10px;
+  background-color: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s;
+}
+
+.reply-list button:hover {
+  background-color: #b91c1c;
+}
+
+/* 게시글 영역 */
+div > h3 {
+  margin-bottom: 8px;
+  color: #111827;
+}
+
+div > p {
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+div > button {
+  margin-right: 10px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: #3b82f6;
+  color: #fff;
+  transition: background-color 0.2s;
+}
+
+div > button:hover {
+  background-color: #2563eb;
+}
+
+RouterLink {
+  display: inline-block;
+  margin-top: 10px;
+  color: #3b82f6;
+  font-weight: 500;
 }
 </style>
